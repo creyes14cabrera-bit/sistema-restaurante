@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema Restaurante</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">🍽️</span> <span id="nombreRestaurante">Mi Restaurante</span></div>
+    <nav class="tabs">
+      <button class="tab active" data-view="mesas">🪑 Mesas</button>
+      <button class="tab" data-view="cocina">👨‍🍳 Cocina <span class="badge" id="badgeCocina" hidden>0</span></button>
+      <button class="tab" data-view="menu">📋 Menú</button>
+      <button class="tab" data-view="ventas">📊 Ventas</button>
+      <button class="tab" data-view="config">⚙️ Ajustes</button>
+    </nav>
+    <div class="clock" id="reloj"></div>
+  </header>
+
+  <main>
+    <!-- MESAS -->
+    <section class="view active" id="view-mesas">
+      <div class="view-head">
+        <h2>Mesas</h2>
+        <div class="legend">
+          <span><i class="dot libre"></i>Libre</span>
+          <span><i class="dot ocupada"></i>Ocupada</span>
+          <span><i class="dot listo"></i>Pedido listo</span>
+        </div>
+      </div>
+      <div class="mesas-grid" id="mesasGrid"></div>
+    </section>
+
+    <!-- PEDIDO (se abre al tocar una mesa) -->
+    <section class="view" id="view-pedido">
+      <div class="view-head">
+        <button class="btn ghost" id="btnVolverMesas">← Mesas</button>
+        <h2 id="tituloPedido">Mesa</h2>
+        <div class="head-actions">
+          <button class="btn ghost" id="btnMoverMesa">↔ Cambiar mesa</button>
+          <button class="btn danger ghost" id="btnCancelarPedido">Anular pedido</button>
+        </div>
+      </div>
+      <div class="pedido-layout">
+        <div class="catalogo">
+          <input type="search" id="buscarProducto" placeholder="Buscar plato o bebida..." />
+          <div class="chips" id="chipsCategorias"></div>
+          <div class="productos-grid" id="productosGrid"></div>
+        </div>
+        <aside class="cuenta">
+          <div class="cuenta-meta">
+            <label>Mesero <input id="inputMesero" placeholder="Nombre" /></label>
+            <label>Personas <input id="inputPersonas" type="number" min="1" value="1" /></label>
+          </div>
+          <ul class="items" id="listaItems"></ul>
+          <div class="cuenta-total">
+            <span>Subtotal</span><strong id="subtotalPedido">$0</strong>
+          </div>
+          <div class="cuenta-acciones">
+            <button class="btn primary" id="btnEnviarCocina">Enviar a cocina</button>
+            <button class="btn success" id="btnCobrar">Cobrar</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- COCINA -->
+    <section class="view" id="view-cocina">
+      <div class="view-head">
+        <h2>Cocina</h2>
+        <span class="muted">Las comandas se actualizan automáticamente</span>
+      </div>
+      <div class="comandas" id="comandasGrid"></div>
+    </section>
+
+    <!-- MENÚ -->
+    <section class="view" id="view-menu">
+      <div class="view-head">
+        <h2>Menú</h2>
+        <div class="head-actions">
+          <button class="btn ghost" id="btnNuevaCategoria">+ Categoría</button>
+          <button class="btn primary" id="btnNuevoProducto">+ Producto</button>
+        </div>
+      </div>
+      <table class="tabla">
+        <thead><tr><th>Producto</th><th>Categoría</th><th class="num">Precio</th><th>Disponible</th><th></th></tr></thead>
+        <tbody id="tablaMenu"></tbody>
+      </table>
+    </section>
+
+    <!-- VENTAS -->
+    <section class="view" id="view-ventas">
+      <div class="view-head">
+        <h2>Ventas</h2>
+        <div class="head-actions">
+          <label class="inline">Desde <input type="date" id="fechaDesde" /></label>
+          <label class="inline">Hasta <input type="date" id="fechaHasta" /></label>
+          <button class="btn ghost" id="btnExportarCSV">⬇ CSV</button>
+        </div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="reportes">
+        <div class="card">
+          <h3>Por método de pago</h3>
+          <div id="porMetodo"></div>
+        </div>
+        <div class="card">
+          <h3>Productos más vendidos</h3>
+          <div id="topProductos"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Historial de cuentas</h3>
+        <table class="tabla">
+          <thead><tr><th>#</th><th>Fecha</th><th>Mesa</th><th>Mesero</th><th>Método</th><th class="num">Total</th><th></th></tr></thead>
+          <tbody id="tablaVentas"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section class="view" id="view-config">
+      <div class="view-head"><h2>Ajustes</h2></div>
+      <form class="card form" id="formConfig">
+        <label>Nombre del restaurante <input name="nombre" required /></label>
+        <label>NIT / Identificación <input name="nit" /></label>
+        <label>Dirección <input name="direccion" /></label>
+        <label>Teléfono <input name="telefono" /></label>
+        <label>Número de mesas <input name="mesas" type="number" min="1" max="100" required /></label>
+        <label>Propina sugerida (%) <input name="propina" type="number" min="0" max="100" step="1" /></label>
+        <label>Mensaje en el recibo <input name="mensaje" /></label>
+        <button class="btn primary" type="submit">Guardar ajustes</button>
+      </form>
+      <div class="card">
+        <h3>Copia de seguridad</h3>
+        <p class="muted">Los datos se guardan en este navegador. Descarga una copia periódicamente.</p>
+        <div class="head-actions">
+          <button class="btn ghost" id="btnBackup">⬇ Descargar copia</button>
+          <label class="btn ghost">⬆ Restaurar copia <input type="file" id="inputRestore" accept="application/json" hidden /></label>
+          <button class="btn danger ghost" id="btnReset">Borrar todo</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal genérico -->
+  <div class="modal-backdrop" id="modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h3 id="modalTitulo"></h3>
+        <button class="btn ghost icon" id="modalCerrar" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="modalCuerpo"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <!-- Recibo para imprimir -->
+  <div id="recibo" class="recibo"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
