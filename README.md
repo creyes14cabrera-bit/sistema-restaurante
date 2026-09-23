@@ -3,6 +3,8 @@
 Sistema de punto de venta para restaurante. HTML + CSS + JavaScript, sin dependencias.
 Los datos se guardan en el navegador (`localStorage`).
 
+**Demo en línea:** https://creyes14cabrera-bit.github.io/sistema-restaurante/
+
 ## Cómo usarlo
 
 Abre `index.html` en el navegador, o sírvelo localmente:
